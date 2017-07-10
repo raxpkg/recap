@@ -1,0 +1,47 @@
+pipeline:
+  build:
+    image: registry.pkgdev.rackspace.com/build-base:${DIST}
+    commands:
+      #do build-deps
+      - apt-get update
+      - echo "yes" | mk-build-deps --install --remove debian/control
+      #set up the upstream branch - has to be orphan so the git archive is pure.
+      - git checkout --orphan upstream
+      - git reset --hard
+      #add the upstream and get the archive
+      - git remote add upstream https://github.com/rackerlabs/recap.git
+      - git fetch -t upstream
+      - export VERSION=0.9.14
+      - git archive $VERSION -o ../recap_$VERSION.orig.tar.gz
+      #using it's tarball to play well with .gitexports
+      - tar -zxf ../recap_$VERSION.orig.tar.gz
+      #execute the build
+      - git checkout $DRONE_COMMIT -- debian
+      - debuild -us -uc
+      - cd ..
+      - rename "s/(.*)-(.*)\.deb/\1-${DIST}\2.deb/" *.deb
+
+  upload-common:
+      image: registry.pkgdev.rackspace.com/daf:dev
+      aptlyurl: beast-internal.pkgdev.rackspace.com
+      repo: common
+      filename: ../recap_0.9.14-${DIST}1_all.deb
+      when:
+        event: tag
+      
+  register-common:
+    image: registry.pkgdev.rackspace.com/dar:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: recap_0.9.14-${DIST}1_all.deb
+    dist: ${DIST}
+    when:
+      event: tag
+
+matrix:
+  DIST:
+    - xenial
+    - trusty
+    - debian-jessie
+    - debian-stretch
+    - debian-sid

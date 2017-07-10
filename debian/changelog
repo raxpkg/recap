@@ -1,0 +1,16 @@
+recap (0.9.14-1) unstable; urgency=medium
+
+  * Bumping to latest version
+
+ -- Brandon Tomlinson <brandon.tomlinson@rackspace.com>  Tue, 13 Sep 2016 19:41:13 +0000
+recap (0.9.11-1) UNRELEASED; urgency=medium
+
+  * Test Build of latest tag
+
+ -- Brandon Tomlinson <brandon.tomlinson@rackspace.com>  Thu, 03 Mar 2016 22:45:18 +0000
+
+recap (0.9.8-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Andreas "Jimmy" Gredler <andreas.gredler@rackspace.com>  Tue, 11 Aug 2015 11:28:20 +0200
