@@ -1,0 +1,2 @@
+version=4
+https://github.com/rackerlabs/recap/releases /rackerlabs/recap/archive/(.+)\.tar\.gz
