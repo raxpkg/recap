@@ -28,4 +28,4 @@ override_dh_installchangelogs:
 
 override_dh_auto_install:
 	dh_auto_install -- PREFIX=/usr
-
+	rm $(CURDIR)/debian/recap/usr/share/doc/recap/COPYING
