@@ -27,5 +27,6 @@ override_dh_installchangelogs:
 	dh_installchangelogs CHANGELOG.md -k upstream
 
 override_dh_auto_install:
-	dh_auto_install -- PREFIX=/usr
+	$(MAKE) PREFIX=/usr install-base install-man install-doc install-cron \
+		DESTDIR=$(CURDIR)/debian/recap AM_UPDATE_INFO_DIR=no
 	rm $(CURDIR)/debian/recap/usr/share/doc/recap/COPYING
