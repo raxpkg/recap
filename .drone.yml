@@ -11,21 +11,21 @@ pipeline:
       #add the upstream and get the archive
       - git remote add upstream https://github.com/rackerlabs/recap.git
       - git fetch -t upstream
-      - export VERSION=0.9.14
       - git archive $VERSION -o ../recap_$VERSION.orig.tar.gz
       #using it's tarball to play well with .gitexports
       - tar -zxf ../recap_$VERSION.orig.tar.gz
       #execute the build
+      - git fetch --no-tags origin
       - git checkout $DRONE_COMMIT -- debian
-      - debuild -us -uc
+      - debuild -us -uc --lintian-opts --profile debian
       - cd ..
-      - rename "s/(.*)-(.*)\.deb/\1-${DIST}\2.deb/" *.deb
+      - rename "s/(.*)-(.*)\.deb/$1-${DIST}$2.deb/" *.deb
 
   upload-common:
       image: registry.pkgdev.rackspace.com/daf:dev
       aptlyurl: beast-internal.pkgdev.rackspace.com
       repo: common
-      filename: ../recap_0.9.14-${DIST}1_all.deb
+      filename: ../recap_${VERSION}-${DIST}1_all.deb
       when:
         event: tag
       
@@ -33,7 +33,7 @@ pipeline:
     image: registry.pkgdev.rackspace.com/dar:dev
     aptlyurl: beast-internal.pkgdev.rackspace.com
     repo: common
-    filename: recap_0.9.14-${DIST}1_all.deb
+    filename: recap_${VERSION}-${DIST}1_all.deb
     dist: ${DIST}
     when:
       event: tag
@@ -45,3 +45,5 @@ matrix:
     - debian-jessie
     - debian-stretch
     - debian-sid
+  VERSION:
+    - 1.2.0
